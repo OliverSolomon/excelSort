@@ -53,27 +53,29 @@ def create_report(create_dict):
     #iterate over all the names
     for name in data.keys():
         length+=1
-        each_day=list(data[name].values())
-        total+=len(each_day)
-        dates=data[name].keys()#getsdates for each name 
+        days=data[name]
+        dates=data[name].keys()#gets dates for each name 
+        print(f'each_day:{type(days)}')
         no_of_names=len(dates)
-        lst_of_names.extend([nm for nm in no_of_names])
+        lst_of_names.extend([name for i in range(no_of_names)])#make name array same size as dates array
         lst_of_dates.extend(dates)
-        lst_of_timein.extend(each_day[0])
-        lst_of_timeout.extend(each_day[-1])
+        for day in days.values(): 
+            print('day:',day)
+            total+=1
+            lst_of_timein.append(day[0])
+            lst_of_timeout.append(day[-1])
         #lst_of_durations.extend(data[name].values()[0])
         
-    print(f'each_day:{each_day}')
-    print(f'each:{total}')
+    print(f'total:{total}')
     print(f"old length:{length}\nnew length:{len(lst_of_names)}")
     print(f"no of dates:{len(lst_of_dates)}")
     print(f'{len(lst_of_timein)}')
     print(f'{len(lst_of_timeout)}')
-    #df=pd.DataFrame({"Names":lst_of_names,"Date":lst_of_dates,"Time_in":lst_of_timein,"Time_out":lst_of_timeout})
-    df2=pd.DataFrame({"Time_in":lst_of_timein,"Time_out":lst_of_timeout})
-    df=pd.DataFrame({"Names":lst_of_names,"Date":lst_of_dates})
+    df=pd.DataFrame({"Names":lst_of_names,"Date":lst_of_dates,"Time_in":lst_of_timein,"Time_out":lst_of_timeout})
+    #df2=pd.DataFrame({"Time_in":lst_of_timein,"Time_out":lst_of_timeout})
+    #df=pd.DataFrame({"Names":lst_of_names,"Date":lst_of_dates})
     df.to_excel('fingers.xlsx')
-    df2.to_excel('fingers2.xlsx')
+    #df2.to_excel('fingers2.xlsx')
 create_report(create_dict)
 #splits the workbook to two workbooks(with the firt occurence and with the last occurence of a date)
 def splitWB():
