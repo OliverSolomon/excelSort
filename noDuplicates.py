@@ -41,4 +41,20 @@ def combine():
 
     join.to_excel("output.xlsx")
 
-combine()
+# combine()
+
+
+#splits a xlsx file into sheets in the same workbook
+def sendtosheet():
+    df = pd.read_excel('noDupsTime.xlsx')
+    cols = df["Name"].unique()
+    # copyfile(file, newfile)
+
+    newfile = "nameSplit2.xlsx"
+    writer = pd.ExcelWriter(newfile, engine='openpyxl')
+    for myname in cols:
+        mydf = df.loc[df["Name"] == myname]
+        mydf.to_excel(writer, sheet_name=myname, index=False)
+    writer.save()
+
+# sendtosheet()
