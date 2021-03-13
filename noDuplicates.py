@@ -1,6 +1,6 @@
 import pandas as pd
 from glob import glob
-
+from datetime import datetime
 
 def removeDups():
     df = pd.read_excel("Feb 2021.xlsx")
@@ -62,8 +62,17 @@ def create_report(create_dict):
         for day in days.values(): 
             print('day:',day)
             total+=1
-            lst_of_timein.append(day[0])
-            lst_of_timeout.append(day[-1])
+            first_time = datetime.strptime(day[0], '%H:%M:%S')
+            last_time = datetime.strptime(day[-1], '%H:%M:%S')
+            time_diff_Hours = (last_time - first_time).seconds//3600
+            rem_minutes = ((last_time-first_time).seconds% 3600)//60
+            time_diff = str(time_diff_Hours) + ":" + str(rem_minutes)
+
+
+            lst_of_timein.append(first_time.time())
+            lst_of_timeout.append(last_time.time())
+            lst_of_durations.append(time_diff)
+
         #lst_of_durations.extend(data[name].values()[0])
         
     print(f'total:{total}')
@@ -71,7 +80,7 @@ def create_report(create_dict):
     print(f"no of dates:{len(lst_of_dates)}")
     print(f'{len(lst_of_timein)}')
     print(f'{len(lst_of_timeout)}')
-    df=pd.DataFrame({"Names":lst_of_names,"Date":lst_of_dates,"Time_in":lst_of_timein,"Time_out":lst_of_timeout})
+    df=pd.DataFrame({"Names":lst_of_names,"Date":lst_of_dates,"Time_in":lst_of_timein,"Time_out":lst_of_timeout,"Time Spent":lst_of_durations})
     #df2=pd.DataFrame({"Time_in":lst_of_timein,"Time_out":lst_of_timeout})
     #df=pd.DataFrame({"Names":lst_of_names,"Date":lst_of_dates})
     df.to_excel('fingers.xlsx')
